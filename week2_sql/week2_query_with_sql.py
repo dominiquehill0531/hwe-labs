@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 ### Setup: Create a SparkSession
 spark = SparkSession.builder \
     .appName("My First Dataframe") \
-    .master("local[2]") \
+    .master("local[*]") \
     .getOrCreate()
 
 # For Windows users, quiet errors about not being able to delete temporary directories which make your logs impossible to read...

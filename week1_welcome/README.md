@@ -3,7 +3,9 @@
 To set up your development environment, we are going to install software and setup environment variables. To complete the environment setup:
 
 - Follow these [instructions for Windows](setup-windows.md)
+- Follow these [instructions for Windows - WSL (alternative)](setup-wsl.md)
 - Follow these [instructions for Macs](setup-mac.md)
+- Follow these [instructions for AMD64 ChromeBooks](setup-chromeos.md)
 
 ## Environment Setup Overview
 The instructions linked above will configure the following software and environment settings. 
@@ -40,3 +42,15 @@ If you want the gory details of why we must run with:
 Here is the link that explains:
 
 https://github.com/chriscugliotta/pyspark-s3-windows
+
+# Week 1 Video Further Reading Links
+
+[Medallion Architecture](https://dataengineering.wiki/Concepts/Medallion+Architecture)
+
+[Kafka]
+
+[Apache Spark]
+
+[Amazon S3]
+
+[Apache Superset]

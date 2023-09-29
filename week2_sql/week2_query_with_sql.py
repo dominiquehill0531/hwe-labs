@@ -7,6 +7,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # For Windows users, quiet errors about not being able to delete temporary directories which make your logs impossible to read...
+# For Windows users, quiet errors about not being able to delete temporary directories which make your logs impossible to read...
 logger = spark.sparkContext._jvm.org.apache.log4j
 logger.LogManager.getLogger("org.apache.spark.util.ShutdownHookManager"). setLevel( logger.Level.OFF )
 logger.LogManager.getLogger("org.apache.spark.SparkEnv"). setLevel( logger.Level.ERROR )

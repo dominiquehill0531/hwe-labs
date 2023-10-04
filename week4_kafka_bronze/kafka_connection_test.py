@@ -1,7 +1,6 @@
 import os
 from kafka import KafkaConsumer
 
-
 def getScramAuthString(username, password):
   return f"""org.apache.kafka.common.security.scram.ScramLoginModule required
    username="{username}"

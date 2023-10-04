@@ -35,7 +35,7 @@ reviews = spark.read.csv("resources/reviews.tsv.gz", sep="\t", header=True)
 reviews.printSchema()
 #Question 3: How many records are in the dataframe? 
 #Store this number in a variable named "reviews_count".
-reviews.count()
+reviews_count = reviews.count()
 #Question 4: Print the first 5 rows of the dataframe. 
 #Some of the columns are long - print the entire record, regardless of length.
 reviews.show(5, False)

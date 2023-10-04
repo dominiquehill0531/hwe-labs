@@ -24,7 +24,7 @@ consumer = KafkaConsumer(topic,
                          sasl_mechanism='SCRAM-SHA-512',
                          sasl_plain_username=username,
                          sasl_plain_password=password
-                         )
+                        )
 try:
     # Poll and read messages from the topic
     for message in consumer:

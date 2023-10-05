@@ -1,6 +1,6 @@
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, current_timestamp
+from pyspark.sql.functions import col, current_timestamp, split
 
 
 def getScramAuthString(username, password):
@@ -47,7 +47,20 @@ df = spark \
     .load()
 
 # Process the received data
-query = None
+query = df \
+  .withColumn("valChunk1", split("value", '\t').getItem(0)) \
+  .withColumn("valChunk2", split("value", '\t').getItem(1)) \
+  .withColumn("valChunk3", split("value", '\t').getItem(2)) \
+  .drop("value") \
+  .withColumn("review_timestamp", current_timestamp()) \
+  .writeStream \
+  .outputMode("append") \
+  .format("parquet") \
+  .option("auto.create.topics.enable", "true") \
+  .option("subscribe", kafka_topic) \
+  .option("path", "s3a://hwe-fall-2023/dhill/bronze/reviews") \
+  .option("checkpointLocation", "/tmp/kafka-checkpoint") \
+  .start() \
 
 # Wait for the streaming query to finish
 query.awaitTermination()

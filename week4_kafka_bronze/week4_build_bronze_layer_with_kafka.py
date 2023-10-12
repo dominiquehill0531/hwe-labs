@@ -46,24 +46,50 @@ df = spark \
     .option("kafka.sasl.jaas.config", getScramAuthString(username, password)) \
     .load()
 
+df.printSchema()
+
 # Process the received data
+value = split(col("value").cast("string"), '\t')
+
 query = df \
-  .withColumn("valChunk1", split("value", '\t').getItem(0)) \
-  .withColumn("valChunk2", split("value", '\t').getItem(1)) \
-  .withColumn("valChunk3", split("value", '\t').getItem(2)) \
-  .drop("value") \
-  .withColumn("review_timestamp", current_timestamp()) \
-  .writeStream \
-  .outputMode("append") \
+  .withColumn("marketplace", value.getItem(0)) \
+  .withColumn("customer_id", value.getItem(1)) \
+  .withColumn("review_id", value.getItem(2)) \
+  .withColumn("product_id", value.getItem(3)) \
+  .withColumn("product_parent", value.getItem(4)) \
+  .withColumn("product_title", value.getItem(5)) \
+  .withColumn("product_category", value.getItem(6)) \
+  .withColumn("star_rating", value.getItem(7)) \
+  .withColumn("helpful_votes", value.getItem(8)) \
+  .withColumn("total_votes", value.getItem(9)) \
+  .withColumn("vine", value.getItem(10)) \
+  .withColumn("verified_purchase", value.getItem(11)) \
+  .withColumn("review_headline", value.getItem(12)) \
+  .withColumn("review_body", value.getItem(13)) \
+  .withColumn("purchase_date", value.getItem(14)) \
+  .withColumn("review_timestamp", value.getItem(15)) \
+  .drop("value")  
+
+query.printSchema()
+
+""" query.writeStream \
   .format("parquet") \
-  .option("auto.create.topics.enable", "true") \
-  .option("subscribe", kafka_topic) \
+  .outputMode("append") \
   .option("path", "s3a://hwe-fall-2023/dhill/bronze/reviews") \
   .option("checkpointLocation", "/tmp/kafka-checkpoint") \
-  .start() \
+  .start() """
+
+query.writeStream \
+  .format("console") \
+  .outputMode("append") \
+  .option("truncate", False) \
+  .option("headers", True) \
+  .start().awaitTermination()
+  
 
 # Wait for the streaming query to finish
-query.awaitTermination()
+#query.awaitTermination()
+
 
 # Stop the SparkSession
 spark.stop()

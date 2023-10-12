@@ -19,7 +19,7 @@ producer = KafkaProducer(security_protocol="SASL_SSL",
 
 for i in range(0,10):
     # Define the message
-    message = str(i)*5
+    message = "So....more messages, eh..." #str(i)*5
     # Produce the message to the topic
     producer.send(topic, value=message.encode('utf-8'))
     # Flush the producer to ensure the message is sent

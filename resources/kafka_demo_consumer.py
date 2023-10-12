@@ -8,11 +8,11 @@ username = os.environ.get("HWE_USERNAME")
 password = os.environ.get("HWE_PASSWORD")
 
 # Kafka topic to consume messages from
-topic = 'demo-topic-1'
+topic = 'reviews'
 
 # Create Kafka consumer
 consumer = KafkaConsumer(topic,
-                         group_id='demo-group',
+                         group_id='dhill-group',
                          security_protocol="SASL_SSL",
                          sasl_mechanism="SCRAM-SHA-512", 
                          sasl_plain_username=username, 

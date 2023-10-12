@@ -36,6 +36,7 @@ reviews.printSchema()
 #Question 3: How many records are in the dataframe? 
 #Store this number in a variable named "reviews_count".
 reviews_count = reviews.count()
+print(reviews_count)
 #Question 4: Print the first 5 rows of the dataframe. 
 #Some of the columns are long - print the entire record, regardless of length.
 reviews.show(5, False)
@@ -52,7 +53,8 @@ reviews.sort("helpful_votes", ascending=False) \
 #What is the product title for that review? How many helpful votes did it have?
     # ANSWER: Xbox Live Subscription
 #Question 7: How many reviews have a 5 star rating? ANSWER: 80,677
-reviews.selectExpr("CAST(star_rating AS INT) star_rating").sort("star_rating", ascending=False).groupBy("star_rating").count().show()
+#reviews.selectExpr("CAST(star_rating AS INT) star_rating")
+reviews.select(col("star_rating").cast("integer")).sort("star_rating", ascending=False).groupBy("star_rating").count().show
 #Question 8: Currently every field in the data file is interpreted as a string, but there are 3 that should really be numbers.
 #Create a new dataframe with just those 3 columns, except cast them as "int"s.
 castInt = reviews.selectExpr("CAST(star_rating AS INT) star_rating",

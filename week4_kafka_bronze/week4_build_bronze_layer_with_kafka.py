@@ -67,25 +67,24 @@ query = df \
   .withColumn("review_headline", value.getItem(12)) \
   .withColumn("review_body", value.getItem(13)) \
   .withColumn("purchase_date", value.getItem(14)) \
-  .withColumn("review_timestamp", value.getItem(15)) \
+  .withColumn("review_timestamp", current_timestamp()) \
   .drop("value")  
 
 query.printSchema()
 
-""" query.writeStream \
+query.writeStream \
   .format("parquet") \
   .outputMode("append") \
   .option("path", "s3a://hwe-fall-2023/dhill/bronze/reviews") \
   .option("checkpointLocation", "/tmp/kafka-checkpoint") \
-  .start() """
+  .start().awaitTermination()
 
-query.writeStream \
+""" query.writeStream \
   .format("console") \
   .outputMode("append") \
   .option("truncate", False) \
   .option("headers", True) \
-  .start().awaitTermination()
-  
+  .start().awaitTermination() """
 
 # Wait for the streaming query to finish
 #query.awaitTermination()

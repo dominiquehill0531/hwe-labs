@@ -59,9 +59,9 @@ query = df \
   .withColumn("product_parent", value.getItem(4)) \
   .withColumn("product_title", value.getItem(5)) \
   .withColumn("product_category", value.getItem(6)) \
-  .withColumn("star_rating", value.getItem(7)) \
-  .withColumn("helpful_votes", value.getItem(8)) \
-  .withColumn("total_votes", value.getItem(9)) \
+  .withColumn("star_rating", value.getItem(7).cast("integer").alias("star_rating")) \
+  .withColumn("helpful_votes", value.getItem(8).cast("integer").alias("helpful_votes")) \
+  .withColumn("total_votes", value.getItem(9).cast("integer").alias("total_votes")) \
   .withColumn("vine", value.getItem(10)) \
   .withColumn("verified_purchase", value.getItem(11)) \
   .withColumn("review_headline", value.getItem(12)) \

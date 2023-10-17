@@ -77,6 +77,8 @@ query.writeStream \
   .outputMode("append") \
   .option("path", "s3a://hwe-fall-2023/dhill/bronze/reviews") \
   .option("checkpointLocation", "/tmp/kafka-checkpoint") \
+  .option("truncate", False) \
+  .option("headers", True) \
   .start().awaitTermination()
 
 """ query.writeStream \

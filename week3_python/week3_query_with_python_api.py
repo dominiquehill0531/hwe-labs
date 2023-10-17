@@ -76,7 +76,7 @@ timestamped.show(5)
 #Make sure to write it using overwrite mode: append will keep appending duplicates, which will cause problems in later labs...
 timestamped.write.parquet("s3a://hwe-fall-2023/dhill/bronze/reviews_static", "overwrite")
 #Question 11: Read the tab separated file named "resources/customers.tsv.gz" into a dataframe
-customers = spark.read.csv("resources/customers.tsv.gz", sep="\t")
+customers = spark.read.csv("resources/customers.tsv.gz", sep="\t", header=True)
 #Write to S3 under s3a://hwe-$CLASS/$HANDLE/bronze/customers
 #Make sure to write it using overwrite mode: append will keep appending duplicates, which will cause problems in later labs...
 customers.write.parquet("s3a://hwe-fall-2023/dhill/bronze/customers", "overwrite")

@@ -2,7 +2,7 @@ import os
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import desc
 from pyspark.sql.functions import current_timestamp
-from pyspark.sql.types import StructType, StructField, StringType, TimestampType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType, IntegerType, BinaryType, LongType
 
 
 aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
@@ -26,17 +26,61 @@ logger = spark.sparkContext._jvm.org.apache.log4j
 logger.LogManager.getLogger("org.apache.spark.util.ShutdownHookManager"). setLevel( logger.Level.OFF )
 logger.LogManager.getLogger("org.apache.spark.SparkEnv"). setLevel( logger.Level.ERROR )
 
-bronze_schema = None
+bronze_schema = StructType([
+    StructField("key", BinaryType(), nullable=True),
+    StructField("topic", StringType(), nullable=True),
+    StructField("partition", IntegerType(), nullable=True),
+    StructField("offset", LongType(), nullable=True),
+    StructField("timestamp", TimestampType(), nullable=True),
+    StructField("timestampType", IntegerType(), nullable=True),
+    StructField("marketplace", StringType(), nullable=True),
+    StructField("customer_id", StringType(), nullable=True),
+    StructField("review_id", StringType(), nullable=True),
+    StructField("product_id", StringType(), nullable=True),
+    StructField("product_parent", StringType(), nullable=True),
+    StructField("product_title", StringType(), nullable=True),
+    StructField("product_category", StringType(), nullable=True),
+    StructField("star_rating", IntegerType(), nullable=True),
+    StructField("helpful_votes", IntegerType(), nullable=True),
+    StructField("total_votes", IntegerType(), nullable=True),
+    StructField("vine", StringType(), nullable=True),
+    StructField("verified_purchase", StringType(), nullable=True),
+    StructField("review_headline", StringType(), nullable=True),
+    StructField("review_body", StringType(), nullable=True),
+    StructField("purchase_date", StringType(), nullable=True),
+    StructField("review_timestamp", TimestampType(), nullable=False)
+])
 
-bronze_reviews = None
+bronze_reviews = spark.readStream \
+    .schema(bronze_schema) \
+    .parquet("s3a://hwe-fall-2023/dhill/bronze/reviews") \
 
-bronze_customers = None
+bronze_reviews.createOrReplaceTempView("reviews")
+    
+bronze_customers = spark.read \
+    .parquet("s3a://hwe-fall-2023/dhill/bronze/customers")
+    
+bronze_customers.printSchema()
+bronze_reviews.printSchema()
+bronze_customers.createOrReplaceTempView("customers")
 
-silver_data = None
+silver_data = spark.sql(" \
+    SELECT * \
+    FROM reviews \
+    INNER JOIN customers \
+        ON reviews.customer_id = customers.customer_id \
+    WHERE reviews.verified_purchase = 'Y' \
+")
 
-streaming_query = None
+silver_data.printSchema()
 
-streaming_query.start().awaitTermination()
+""" streaming_query = silver_data.writeStream \
+    .format("parquet") \
+    .outputMode("append") \
+    .option("path", "s3a://hwe-fall-2023/dhill/silver/reviews") \
+    .option("checkpointLocation", "/tmp/silver-checkpoint")
+
+streaming_query.start().awaitTermination() """
 
 ## Stop the SparkSession
 spark.stop()

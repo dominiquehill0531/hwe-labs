@@ -8,6 +8,11 @@ aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
 aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 
+#AmazonID: 153601099083
+#SupersetURL: 3.86.203.46:8088/login
+##user: admin
+##password: 1904labs
+
 # Create a SparkSession
 spark = SparkSession.builder \
     .appName("Week6Lab") \

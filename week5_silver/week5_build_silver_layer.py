@@ -65,22 +65,43 @@ bronze_reviews.printSchema()
 bronze_customers.createOrReplaceTempView("customers")
 
 silver_data = spark.sql(" \
-    SELECT * \
-    FROM reviews \
-    INNER JOIN customers \
-        ON reviews.customer_id = customers.customer_id \
-    WHERE reviews.verified_purchase = 'Y' \
+    SELECT \
+        r.marketplace, \
+        r.customer_id, \
+        r.review_id, \
+        r.product_id, \
+        r.product_parent, \
+        r.product_title, \
+        r.product_category, \
+        r.star_rating, \
+        r.helpful_votes, \
+        r.total_votes, \
+        r.vine, \
+        r.review_headline, \
+        r.review_body, \
+        r.purchase_date, \
+        r.review_timestamp, \
+        c.customer_name, \
+        c.gender, \
+        c.date_of_birth, \
+        c.city, \
+        c.state \
+    FROM \
+        reviews r \
+    INNER JOIN customers c\
+        ON r.customer_id = c.customer_id \
+    WHERE r.verified_purchase = 'Y' \
 ")
 
 silver_data.printSchema()
 
-""" streaming_query = silver_data.writeStream \
+streaming_query = silver_data.writeStream \
     .format("parquet") \
     .outputMode("append") \
     .option("path", "s3a://hwe-fall-2023/dhill/silver/reviews") \
     .option("checkpointLocation", "/tmp/silver-checkpoint")
 
-streaming_query.start().awaitTermination() """
+streaming_query.start().awaitTermination()
 
 ## Stop the SparkSession
 spark.stop()

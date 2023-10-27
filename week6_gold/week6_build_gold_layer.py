@@ -73,7 +73,7 @@ aggregated_data = watermarked_data \
     .withColumnRenamed("COUNT(gender)", "ct_by_gender") \
     .withColumnRenamed("SUM(helpful_votes)", "helpful_votes")
     
-# aggregated_data.printSchema()
+aggregated_data.printSchema()
 
 #Write that aggregate data to S3 under s3a://hwe-$CLASS/$HANDLE/gold/fact_review using append mode and a checkpoint location of `/tmp/gold-checkpoint`
 write_gold_query = aggregated_data.writeStream \

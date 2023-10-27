@@ -66,12 +66,26 @@ watermarked_data = silver_data.withWatermark("review_timestamp", "10 seconds")
 
 #Define an aggregated dataframe using `groupBy` functionality to summarize that data over any dimensions you may find interesting
 aggregated_data = watermarked_data \
-    .select("state", "gender", "helpful_votes", "review_timestamp") \
-    .groupBy("review_timestamp", "state", "gender") \
-    .agg({"gender": "count", \
-          "helpful_votes": "sum"}) \
+    .select(
+        "state",
+        "gender",
+        "helpful_votes",
+        "total_votes",
+        "review_timestamp"
+    ) \
+    .groupBy(
+        "review_timestamp",
+        "state",
+        "gender"
+    ) \
+    .agg({
+        "gender": "count", \
+        "helpful_votes": "sum", \
+        "total_votes": "sum" \
+    }) \
     .withColumnRenamed("COUNT(gender)", "ct_by_gender") \
-    .withColumnRenamed("SUM(helpful_votes)", "helpful_votes")
+    .withColumnRenamed("SUM(helpful_votes)", "helpful_votes") \
+    .withColumnRenamed("SUM(total_votes)", "total_votes")
     
 aggregated_data.printSchema()
 

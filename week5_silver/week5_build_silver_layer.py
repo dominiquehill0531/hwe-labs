@@ -99,7 +99,15 @@ streaming_query = silver_data.writeStream \
     .format("parquet") \
     .outputMode("append") \
     .option("path", "s3a://hwe-fall-2023/dhill/silver/reviews") \
-    .option("checkpointLocation", "/tmp/silver-checkpoint")
+    .option("checkpointLocation", "/tmp/silver-checkpoint") \
+    .option("truncate", False) \
+    .option("headers", True)
+
+""" streaming_query = silver_data.writeStream \
+    .format("console") \
+    .outputMode("append") \
+    .option("truncate", False) \
+    .option("headers", True) """
 
 streaming_query.start().awaitTermination()
 

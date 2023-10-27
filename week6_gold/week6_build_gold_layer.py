@@ -69,8 +69,11 @@ aggregated_data = watermarked_data \
     .select("state", "gender", "helpful_votes", "review_timestamp") \
     .groupBy("review_timestamp", "state", "gender") \
     .agg({"gender": "count", \
-          "helpful_votes": "sum"})
-    # .printSchema()
+          "helpful_votes": "sum"}) \
+    .withColumnRenamed("COUNT(gender)", "ct_by_gender") \
+    .withColumnRenamed("SUM(helpful_votes)", "helpful_votes")
+    
+# aggregated_data.printSchema()
 
 #Write that aggregate data to S3 under s3a://hwe-$CLASS/$HANDLE/gold/fact_review using append mode and a checkpoint location of `/tmp/gold-checkpoint`
 write_gold_query = aggregated_data.writeStream \

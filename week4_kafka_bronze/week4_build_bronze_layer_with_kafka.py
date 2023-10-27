@@ -72,24 +72,22 @@ query = df \
 
 query.printSchema()
 
-query.writeStream \
+write_query = query.writeStream \
   .format("parquet") \
   .outputMode("append") \
   .option("path", "s3a://hwe-fall-2023/dhill/bronze/reviews") \
   .option("checkpointLocation", "/tmp/kafka-checkpoint") \
   .option("truncate", False) \
-  .option("headers", True) \
-  .start().awaitTermination()
+  .option("headers", True)
 
-""" query.writeStream \
+""" write_query = query.writeStream \
   .format("console") \
   .outputMode("append") \
   .option("truncate", False) \
-  .option("headers", True) \
-  .start().awaitTermination() """
+  .option("headers", True) """
 
 # Wait for the streaming query to finish
-#query.awaitTermination()
+write_query.start().awaitTermination()
 
 
 # Stop the SparkSession
